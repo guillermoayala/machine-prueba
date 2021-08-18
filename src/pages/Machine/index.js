@@ -6,7 +6,7 @@ import { Button, notification, Spin, Card, Tooltip, Skeleton } from 'antd';
 import { renderButtons } from '../../components/Utils/Keyboard';
 import { Timeline } from 'antd';
 import { SmileTwoTone, HeartTwoTone, CheckCircleTwoTone, VerticalLeftOutlined, CloseOutlined, LoadingOutlined } from '@ant-design/icons';
-
+import About from './About'
 const Machine = () => {
 
     const [data, setData] = useState([])
@@ -14,17 +14,21 @@ const Machine = () => {
     const [peticiones, setPeticiones] = useState([])
     const [pedidos, setPedidos] = useState([])
     const [acum, setAcum] = useState(0)
-
+    const [loadingProduct, setLoadingProduct] = useState(false)
+    const [show, setShow] = useState(false)
     let counterPeticiones = 0
-
+    //Metodo para obtener los productos
     const getProducts = async () => {
         try {
             const { data: { data } } = await axios.get('https://vending-machine-test.vercel.app/api/products')
+            //map para agrear el index a los productos
             const dataIndexed = data.map((e, key) => ({ ...e, key }))
             setData(dataIndexed)
+
+            //Ocultar el skeleton de los productos
             setLoading(false)
         } catch (error) {
-            Alert('Error', 'Algo salio mal', 'error')
+            Alert('Error', 'houston, we have a problem', 'error')
 
         }
 
@@ -34,56 +38,40 @@ const Machine = () => {
     }, [])
 
 
-  
-
-    const agregarProducto = ({ preparation_time, name }) => {
-        setAcum(acum + preparation_time * 1000);
-        setPedidos([...pedidos, { preparation_time, name, title:'Create order' }]);
-
-        setTimeout(() => {
-            Alert('Ready', 'Se completo la orden de ' + name, 'success')
-            setPedidos([...pedidos, { preparation_time: preparation_time, name: name, title: 'End' }]);
-        }, preparation_time * 1000)
-    };
-
-
-    let array = []
-    const agregarProducto2 = (e, number) => {
-        setPedidos([...pedidos, { preparation_time: e.preparation_time, name: e.name }]);
-
-        const obj = {
-            Resultado: '3',
-            BD_Proceso: 'Loading ' + e.name,
-            preparation_time: e.preparation_time,
-            name: e.name
-        }
-        array.push(obj)
-        console.log(array)
-
-        // setPeticiones([...peticiones, obj])
-
-        setTimeout(() => {
-
-            Alert('Ready', 'Se completo la orden de ' + e.name, 'success')
-
-            const objDone = {
-                Resultado: '1',
-                BD_Proceso: 'Orden de ' + e.name + ' completada',
-                preparation_time: e.preparation_time,
-                name: e.name
-            }
-            array.push(objDone)
-            console.log(array)
-            // setPeticiones([...peticiones, objDone])
-        }, e.preparation_time * 1000)
-    }
 
 
     useEffect(() => {
+        //Contador para el acomulador de tiempo de espera
+        let count = 0
+        //El tiempo del nuevo producto se le agrega al acomulado
+        for (const i in pedidos) {
+            count = count + pedidos[i].preparation_time
+        }
+        //Metodo para ocultar el cargando cuando se acabe el acum
+        setTimeout(() => {
+            setLoadingProduct(false)
+        }, count * 1000)
+    }, [pedidos])
 
-    }, [peticiones])
+    //Metodo para agregar producto a la linea de tiempo
+    const agregarProducto = ({ preparation_time, name }) => {
+        //Activar el cargando
+        setLoadingProduct(true)
 
+        //se agrega el tiempo del producto al estado que contiene el acomulador
+        setAcum(acum + preparation_time * 1000);
 
+        //Se agrega el producto al state de pedidos
+        setPedidos([...pedidos, { preparation_time, name, title: 'Create order' }]);
+
+        setTimeout(() => {
+            Alert('Success', 'Your order of ' + name + ' is done', 'success')
+            setPedidos([...pedidos, { preparation_time: preparation_time, name: name, title: 'End' }]);
+
+        }, preparation_time * 1000)
+    };
+
+    //Mapeo de los productos
     let productList = data.length > 0
         && data.map((data, i) => {
             return (
@@ -105,31 +93,51 @@ const Machine = () => {
         <>
             <div className="container-principal">
 
-                <Skeleton loading={loading} active>
+                <Skeleton
+                    loading={loading}
+                    active>
 
-                    <div className="contenedor-products">
+                    <div
+                        className="contenedor-products">
                         {productList}
                     </div>
                 </Skeleton>
                 <div className="keyboard col-lg-4">
-                    <Card title={'Make your order'} style={{ height: '700px' }} actions={[
-                        <Button type='primary' onClick={()=> setPedidos([])}>Clean</Button>
-                    ]}>
+                    <Card
+                        title={'Your orders'}
+                        style={{ height: '700px' }}
+                        actions={[
+                            <Button type='primary' onClick={() => setPedidos([])}>Clean</Button>
+                        ]}
+                        extra={[
+                            <Button type='primary' onClick={() => setShow(true)}>About</Button>
+
+                        ]}>
                         <LineFunction arrayData={peticiones}></LineFunction>
                         <Timeline>
                             {pedidos.map((p, key) => (
 
                                 <Timeline.Item key={key}>
-                                    <p>{p.title} of {p.name}</p>
+                                    <p>Order of {p.name}</p>
                                 </Timeline.Item>
 
                             ))}
                         </Timeline>
+                        {
+                            loadingProduct ?
+                                <>
+                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                        <Spin tip={'Loading order'}></Spin>
+                                    </div>
+                                </>
+                                :
+                                <>
 
-                        <renderButtons></renderButtons>
+                                </>
+                        }
                     </Card>
                 </div>
-
+                <About show={show} setShow={setShow}></About>
 
 
             </div>
