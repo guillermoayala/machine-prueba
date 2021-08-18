@@ -5,7 +5,6 @@ import { Timeline } from 'antd';
 function LineFunction(props) {
 
     const { arrayData } = props
-    console.log(arrayData)
 
 
    const array = [{
