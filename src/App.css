@@ -1,0 +1,138 @@
+html,
+body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to bottom right, #694af5 0%, #b3b3b3 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family: 'Poppins';
+}
+
+body {
+  padding-top: 20px;
+  user-select: none;
+}
+
+.react-calculator {
+    position: relative;
+    margin: 0 auto;
+    width: 320px;
+    background-color: #292f36;  
+    box-shadow: 0 19px 38px rgba(19, 19, 19, .24),
+  0 15px 12px rgba(19, 19, 19, .12);
+}
+
+
+button {
+  outline: none;
+  border: 0;
+  padding: 16px;
+  font-size: 20px;
+  line-height: 1;
+  background-color: transparent;
+  color: #ffce5c;
+  transition: all 300ms;
+  border: 1px solid #0001;
+}
+
+button:hover {
+  color: #00a3f5;
+  border: 1px solid #ffce5c22;
+}
+
+
+.result {
+  position: relative;
+  width: 320px;
+  height: 80px;
+  padding: 8px;
+  overflow: hidden;
+  background-color: rgba(19, 19, 19, .64);
+  font-size: 32px;
+  line-height: 2;
+  color: #60d63c;
+  text-align: right;
+  direction: rtl;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.functions button, .math-operations button {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  color: #d63c6b
+}
+
+.functions button:hover, 
+.math-operations button:hover {
+  color: #b696a0;
+}
+
+.numbers {
+  width: 240px;
+  float: left;
+  color:yellow;
+}
+
+.numbers button {
+  display: block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  float: left;
+}
+
+.numbers button:last-child {
+  width: 100%;
+}
+
+.functions {
+  float: left;
+  width: 240px;
+}
+
+.button-long-text 
+{
+  font-size: 12px;
+}
+
+.site-page-header {
+  border: 1px solid rgb(235, 237, 240);
+}
+
+.ant-page-header{
+  color:#ffffff;
+}
+.ant-page-header.has-breadcrumb{
+  padding-top: 0px !important;
+}
+.card-product{
+  justify-content: center;
+  display: flex;
+  padding-top: 15px;
+}
+
+.product-img{
+  width: 120px;
+  height: 100px;
+  cursor: pointer;
+}
+
+.contenedor-products{
+  display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left:15px;
+    width: 1030px;
+}
+
+.container-principal{
+  display: flex;
+}
+.keyboard{
+  margin: 10px;
+}
